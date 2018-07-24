@@ -1,0 +1,21 @@
+Fn-1111000000000000:
+  GetUID(0)
+  GetVote(1)
+  TestLess(1,0,2)
+  If(2)
+    SetVote(0)  
+    Close()
+  While(0)
+    Call[0000111100000000]
+
+Fn-0000111100000000:
+  GetVote(0)
+  Output(0,0)
+  Broadcast[0000000011110000]()
+
+Fn-0000000011110000:
+  Input(0,0)
+  GetVote(1)
+  TestLess(1,0,2)
+  If(2)
+    SetVote(0)
