@@ -2,6 +2,9 @@
 #define HP_EXPERIMENT_H
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 #include "hp_config.h"
 #include "ParaGraph.h"
@@ -99,6 +102,12 @@ class Experiment
 
       SetVote(config.VOTE()); SetUID(config.UID());
       SetPOSX(config.POSX()); SetPOSY(config.POSY());
+
+      // create and open the .csv file
+      mCSV.open(FILE_NAME);
+
+      mCSV << "Generation" << "," << "Best Host" << "," << "Best Host -> Parasite" << "," << "Best Parasite" << "," << "Best Parasite -> Host" << std::endl;
+
     }
 
     ~Experiment()
@@ -293,6 +302,15 @@ class Experiment
     size_t WITH = 0;
     size_t WITHOUT = 1;
     size_t PARA = 2;
+
+    /* VARIABLES TO HELP RECORD THE DATA*/
+
+    //Actual file we are adding too
+    std::ofstream mCSV;
+    //Buffer to open the stream
+    std::ofstream fs;
+    //Name of file
+    std::string FILE_NAME = "Results.csv";
 };
 
 size_t Experiment::UID = 0;
@@ -311,18 +329,22 @@ void Experiment::Run()
   for(size_t i = 0; i < NUM_GENS; ++i)
   {
     std::cout << "GEN: " << i << std::endl;
+    mCSV << i << ",";
     auto best = Experiment::Evaluation_step();
 
     if((i % SNAP_SHOT) == 0)
     {
+      std::cout << "BEST ALGORITHM WITHOUT PARASITE: \n" << std::endl;
       Agent & without = mGoodWorld->GetOrg(best[WITHOUT]);
       without.GetGenome().PrintProgramFull();
       std::cout << std::endl;
 
+      std::cout << "BEST ALGORITHM WITH PARASITE: \n" << std::endl;
       Agent & with = mGoodWorld->GetOrg(best[WITH]);
       with.GetGenome().PrintProgramFull();
       std::cout << std::endl;
 
+      std::cout << "BEST PARASITE: \n " << std::endl;
       Agent & para = mBadWorld->GetOrg(best[PARA]);
       para.GetGenome().PrintProgramFull();
       std::cout << std::endl;
@@ -331,6 +353,8 @@ void Experiment::Run()
     Experiment::Selection_step();
     Experiment::Update_step();
   }
+
+  mCSV.close();
 }
 
 //Evalute each agent for 
@@ -384,6 +408,8 @@ std::vector<size_t> Experiment::Evaluation_step()
   std::cout << "Best With Parasite: " << best_pos[WITH] << std::endl;
   std::cout << "Best Parasite: " << best_pos[PARA] << std::endl;
   std::cout << std::endl;
+
+  mCSV << best_pos[WITH] << "," << THEORY_MAX_PARA - best_pos[WITH] << "," << best_pos[PARA] << "," << THEORY_MAX_PARA - best_pos[PARA] << std::endl;
 
   return best_pos;
 }
@@ -636,7 +662,7 @@ void Experiment::Config_World()
   { 
     return agent.mScore;
   });
-  mGoodWorld->SetMutFun([this](Agent & agent, emp::Random & rnd)
+  mBadWorld->SetMutFun([this](Agent & agent, emp::Random & rnd)
   {
     program_t & pro = agent.mGenome;
     return this->mMutant->ApplyMutations(pro, rnd);
