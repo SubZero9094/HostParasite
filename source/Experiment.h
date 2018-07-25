@@ -107,7 +107,6 @@ class Experiment
       mCSV.open(FILE_NAME);
 
       mCSV << "Generation" << "," << "Best Host" << "," << "Best Host -> Parasite" << "," << "Best Parasite" << "," << "Best Parasite -> Host" << std::endl;
-
     }
 
     ~Experiment()
@@ -220,6 +219,9 @@ class Experiment
 
     //Will test step by step process of the hardware
     void GraphTest8();
+
+    //Will test to see if system without parasite will work
+    void GraphTest9();
 
   private:
 
@@ -915,6 +917,26 @@ void Experiment::GraphTest8()
   double s = mGraph->RunPara(NUM_ITER);
   std::cout << "PARASITE IN THE SYSTEM SCORE: " << s << " THEO MAX: " << THEORY_MAX_PARA << std::endl;
 
+}
+
+//Will test the system without parasites
+void Experiment::GraphTest9()
+{
+  std::cout << "GRAPHTEST8: \n" << std::endl;
+
+  Experiment::Config_Inst();
+  Experiment::Config_Events();
+  mGraph->CreateGraph(GRA_DIM, GRA_TYPE, inst_lib, event_lib);
+  
+  std::cout << "NO PARASITE IN SYSTEM" << std::endl;  
+  mGraph->ConfigureTraits();
+  mGraph->CreateAdj(GRA_DIM, GRA_TYPE);
+  mGraph->SetPara(false);
+  program_t advance = Experiment::Genome_ADVANCE();
+  mGraph->Reset();
+  mGraph->GenomeNoPara(advance);
+
+  std::cout << "Score: " << mGraph->RunNoPara(NUM_ITER);
 }
 
 
