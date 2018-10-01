@@ -1,5 +1,5 @@
 # Project-specific settings
-PROJECT := main
+PROJECT := alpha
 EMP_DIR := ../Empirical/source
 
 # Flags to use regardless of compiler

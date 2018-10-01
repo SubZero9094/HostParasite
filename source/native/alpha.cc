@@ -23,13 +23,6 @@ int main(int argc, char* argv[])
 	if (args.TestUnknown() == false)
 		exit(0);
 
-	std::cout << "==============================" << std::endl;
-	std::cout << "|    How am I configured?    |" << std::endl;
-	std::cout << "==============================" << std::endl;
-	config.Write(std::cout);
-	std::cout << "==============================\n"
-	    << std::endl;
-
 	Experiment e(config);
 	e.Run();
 

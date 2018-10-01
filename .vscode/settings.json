@@ -53,5 +53,9 @@
         "xtr1common": "cpp",
         "xtree": "cpp",
         "xutility": "cpp"
-    }
+    },
+    "python.linting.pylintEnabled": false,
+    "python.pythonPath": "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\Python36_64\\python.exe",
+    "python.linting.enabled": false,
+    "python.linting.flake8Enabled": true
 }

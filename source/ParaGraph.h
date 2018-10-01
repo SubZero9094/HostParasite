@@ -204,7 +204,7 @@ class ParaGraph
         //Will hold the final votes 
         vote_t mFinalVotes;
         //The scheduler
-        std::vector<coor_t> mSchedule;
+        emp::vector<coor_t> mSchedule;
         //The holder of parasite positions
         std::vector<coor_t> mParaCoors;
 
